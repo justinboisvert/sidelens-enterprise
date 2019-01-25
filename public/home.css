@@ -1,0 +1,156 @@
+
+body {
+background-color:#0457BE;
+margin:0px;
+padding:0px;
+font-family:Verdana;
+}
+#container {
+ padding:0px;
+ width:100%;
+ text-align:center;
+ font-size:20px;
+ color:white;
+}
+
+#product-container input[type=text], #product-container input[type=password] {
+  font-size:20px;
+}
+
+#container_product {
+  margin-left:50px;
+  text-align:left;
+  width:800px;
+}
+
+#content_product {
+  background-color:white;
+  border-radius:4px;
+  color:black;
+  padding:10px;
+  box-shadow: 0px 3px 3px black;
+}
+
+#content_product input[type=text], #content_product input[type=password] {
+  font-size:20px;
+  width:100%;
+  border-radius:3px;
+  border: 1px solid black;
+}
+
+#content_product textarea {
+  font-size:20px;
+  width:100%;
+  border-radius:3px;
+  border: 1px solid black;
+}
+#platform_content {
+ padding-top:10px;
+ text-align:center;
+ font-size:20px;
+ background-color:#FFFFFF;
+ color:black;
+}
+
+#menu {
+  position:fixed;
+  padding:10px;
+  margin:0px;
+  width:100%;
+  height:35px;
+  background-color:white;
+  box-shadow: 0px 0px 8px 2px black;
+}
+
+#box {
+ background-color:none;
+ border:none;
+ width:300px;
+ border-radius:4px;
+ height:300px;
+ padding:10px;
+ display:inline-block;
+ vertical-align:top;
+ text-align:center;
+}
+
+
+
+#content-box {
+ margin-top:10px;
+ background-color:white;
+ border: .5px solid black;
+ width:300px;
+ border-radius:4px;
+ height:140px;
+ padding:10px;
+ color:black;
+ font-size:18px;
+ text-align:left;
+ box-shadow: 0px 3px 3px black;
+}
+
+#downer {
+ margin-top:20px;
+ margin-bottom:10px;
+ width:100%;
+ height:15px;
+ color:white;
+ text-align:center;
+ font-size:12px;
+}
+.bannerlogo {
+  width:100px;
+  height:100px;
+}
+
+
+#buy-label {
+ width:150px;
+ padding:5px;
+ height:30px;
+ color:white;
+ font-size:20px;
+ background-color:#08ADF0;
+ border-radius:4px;
+ text-align:center;
+ margin-left:auto;
+ margin-right:auto;
+ border: .5px solid black;
+}
+
+#buy-label a:link, #buy-label a:hover, #buy-label a:visited {
+ color:white;
+ text-decoration:none;
+}
+
+#buy-label:hover {
+ width:150px;
+ padding:5px;
+ height:30px;
+ color:white;
+ font-size:20px;
+ background-color:#05A5E6;
+ border-radius:4px;
+ text-align:center;
+ margin-left:auto;
+ margin-right:auto;
+ border: .5px solid black;
+}
+
+#menu_links {
+  float:right;
+  margin-top:7px;
+  padding-right:20px;
+  color:#0049B4;
+}
+
+#menu_links a:link, #menu_links a:visited {
+  color:#0049B4;
+  text-decoration:none;
+}
+
+#menu_links a:hover {
+  color:#003788;
+  text-decoration:none;
+}

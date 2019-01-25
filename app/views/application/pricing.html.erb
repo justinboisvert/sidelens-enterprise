@@ -1,0 +1,42 @@
+<html>
+<head>
+<title>Sidelens</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<link rel='stylesheet' href='home.css'/>
+</head>
+<script>
+$(document).ready(function(){
+  $("#success-content").hide();
+  $("#buy-label").click(function(){
+    name = $("input[name=fullname]").val();
+    company = $("input[name=company]").val();
+    email = $("input[name=email]").val();
+    reasoning = $("textarea[name=reasoning]").val();
+    $.post("/add_mailchimp",{"name": name, "company" : company, "email" : email, "reasoning" : reasoning}, function (resp){
+      $("#success-content").fadeIn();
+    }); 
+  });
+});
+</script>
+<body>
+<div id='menu'>
+<%= get_menu.html_safe %>
+</div>
+<div id = 'container'>
+<br/><br/><br/><br/>
+<span style='font-size:25px;'>Give us some info so we can best get you started.</span><br/><br/>
+<div id = 'content_product' style='width:400px; margin-left:auto; margin-right:auto; text-align:left;'>
+Name <br/><input name = 'fullname' type = 'text'/><br/>
+Company URL <br/><input name = 'company' type = 'text'/><br/>
+E-mail <br/><input name = 'email' type = 'text'/><br/>
+Reason for interest<br/>
+<textarea name = 'reasoning'></textarea>
+</div><br/><br/>
+<div id ='buy-label'><a href = '#'>Submit</a></div>
+<div id ='success-content'>
+<br/>
+Thanks! We'll reach out to you as soon as possible.
+</div>
+<div id = 'downer'>&copy; TreasureHunt Group Inc.</div>
+</body>
+</html>
