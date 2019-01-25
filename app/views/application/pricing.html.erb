@@ -12,10 +12,21 @@ $(document).ready(function(){
     company = $("input[name=company]").val();
     email = $("input[name=email]").val();
     reasoning = $("textarea[name=reasoning]").val();
-    $.post("/add_mailchimp",{"name": name, "company" : company, "email" : email, "reasoning" : reasoning}, function (resp){
-      $("#success-content").fadeIn();
-    }); 
-  });
+    console.log(!name.trim() || !company.trim() || !email.trim())
+    if (!name.trim() || !company.trim() || !email.trim()){
+      $("#success-content").fadeOut(1, function() {
+        $("#success-content").html("<br/>Please fill out the required fields.");
+        $("#success-content").fadeIn();
+      });
+    } else {
+     $.post("/add_mailchimp",{"name": name, "company" : company, "email" : email, "reasoning" : reasoning}, function (resp){
+      $("#success-content").fadeOut(1, function(){
+        $("#success-content").html("<br/>Thanks! We'll reach out to you as soon as possible.");
+        $("#success-content").fadeIn();
+      });
+     }); 
+   }
+   });
 });
 </script>
 <body>
@@ -26,16 +37,14 @@ $(document).ready(function(){
 <br/><br/><br/><br/>
 <span style='font-size:25px;'>Give us some info so we can best get you started.</span><br/><br/>
 <div id = 'content_product' style='width:400px; margin-left:auto; margin-right:auto; text-align:left;'>
-Name <br/><input name = 'fullname' type = 'text'/><br/>
-Company URL <br/><input name = 'company' type = 'text'/><br/>
-E-mail <br/><input name = 'email' type = 'text'/><br/>
+Name <span style='color:#FF740A'>*</span><br/><input name = 'fullname' type = 'text'/><br/>
+Company URL <span style='color:#FF740A'>*</span><br/><input name = 'company' type = 'text'/><br/>
+E-mail <span style='color:#FF740A'>*</span><br/><input name = 'email' type = 'text'/><br/>
 Reason for interest<br/>
 <textarea name = 'reasoning'></textarea>
 </div><br/><br/>
 <div id ='buy-label'><a href = '#'>Submit</a></div>
 <div id ='success-content'>
-<br/>
-Thanks! We'll reach out to you as soon as possible.
 </div>
 <div id = 'downer'>&copy; TreasureHunt Group Inc.</div>
 </body>
