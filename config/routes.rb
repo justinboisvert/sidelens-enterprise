@@ -5,5 +5,8 @@ Rails.application.routes.draw do
   get "/pricing", to: "application#pricing"
   get "/product", to: "application#product"
   post "/add_mailchimp", to: "application#add_mailchimp"
-  post "/enterprise/create", to: "application#add_enterprise"
+  post "/enterprise/create", to: "application#create_enterprise"
+  post "/enterprise/login", to: "enterprise#login"
+  get "/enterprise/self", to: "enterprise#get_by_session"
+  post "/enterprise/logout", to: "enterprise#logout"
 end

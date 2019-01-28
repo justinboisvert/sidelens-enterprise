@@ -1,6 +1,6 @@
 require 'unirest'
 require 'json'
-
+require 'bcrypt'
 #
 # Mailchimp list id: afccdcf857 
 #
@@ -31,6 +31,13 @@ class ApplicationController < ActionController::Base
     return @@main_url
   end
 
+  def create_enterprise()
+    encrypted_pass = BCrypt::Password.create(params[:password])  
+    enterprise = Enterprise.create(:username => params[:username], :password => encrypted_pass, :hasPaid => false)
+    render :json => enterprise
+  end
+ 
+ 
   def add_mailchimp()
     name = params[:name]
     company = params[:company]
