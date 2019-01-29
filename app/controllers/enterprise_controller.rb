@@ -20,5 +20,15 @@ class EnterpriseController < ActionController::Base
       render :json => {:message => "Authentication not provided."}
     end
   end
-  
+ 
+  def create_interface()
+    if !request.headers["Auth"].blank?
+      enterprise = Enterprise.get_by_session(request.headers["Auth"])
+      interface = enterprise.interfaces.create(:connected => false, :host => params[:host], :port => params[:port], :description => params[:description])
+      return :json => interface 
+    else
+      render :json => {:message => "Authentication not provided."}
+    end
+  end
+ 
 end

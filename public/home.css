@@ -13,6 +13,26 @@ font-family:Verdana;
  color:white;
 }
 
+.panel-header {
+ color:gray;
+}
+#container-panel {
+ box-sizing:content-box;
+ padding:20px;
+ text-align:left;
+ font-size:20px;
+ color:white;
+}
+
+
+#content-panel {
+  background-color:white;
+  border-radius:4px;
+  color:black;
+  padding:20px;
+  box-shadow: 0px 3px 3px black;
+}
+
 #product-container input[type=text], #product-container input[type=password] {
   font-size:20px;
 }
@@ -144,6 +164,7 @@ font-family:Verdana;
   padding-right:20px;
   color:#0049B4;
 }
+
 
 #menu_links a:link, #menu_links a:visited {
   color:#0049B4;

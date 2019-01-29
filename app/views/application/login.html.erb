@@ -1,8 +1,29 @@
 <html>
 <head>
 <title>Sidelens</title>
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <link rel='stylesheet' href='home.css'/>
 </head>
+<script>
+ $(document).ready(function(){
+   $('div[name=login_btn]').click(function(){
+     username = $('input[name=username]').val();
+     password = $('input[name=pass]').val();
+     $.post("/enterprise/login", {username: username, password: password}, function (data){
+       if ("session" in data){
+         Cookies.set('Auth',data["session"]);
+         window.location.replace("/panel/");
+       } else {
+         $("#success-content").fadeOut(1, function(){
+          $("#success-content").html("<br/>User/password combination does not exist.");
+          $("#success-content").fadeIn();
+        }); 
+       } 
+     });
+   });
+ }); 
+</script>
 <body>
 <div id='menu'>
 <%= get_menu.html_safe %>
@@ -11,10 +32,13 @@
 <br/><br/><br/><br/>
 Login<br/><br/>
 <div id = 'content_product' style='width:400px; margin-left:auto; margin-right:auto; text-align:left;'>
-E-mail <br/><input type = 'text'/><br/>
-Password <br/><input type = 'password'/><br/>
+E-mail <br/><input name = 'username' type = 'text'/><br/>
+Password <br/><input name = 'pass' type = 'password'/><br/>
 </div><br/><br/>
-<div id ='buy-label'><a href = '#'>Login</a></div>
+<div id ='buy-label' name = 'login_btn'><a href = '#'>Login</a></div>
+<div id ='success-content'>
+
+</div>
 <div id = 'downer'>&copy; TreasureHunt Group Inc.</div>
 </body>
 </html>
