@@ -1,5 +1,6 @@
 class EnterpriseController < ActionController::Base
-  skip_before_action :verify_authenticity_token  
+  skip_before_action :verify_authenticity_token
+ 
   def login()
     render :json => Enterprise.login(params[:username], params[:password]) 
   end
@@ -24,11 +25,19 @@ class EnterpriseController < ActionController::Base
   def create_interface()
     if !request.headers["Auth"].blank?
       enterprise = Enterprise.get_by_session(request.headers["Auth"])
-      interface = enterprise.interfaces.create(:connected => false, :host => params[:host], :port => params[:port], :description => params[:description])
-      return :json => interface 
+      interface = enterprise.interfaces.create(:name => params[:name], :connected => false, :host => params[:host], :port => params[:port], :description => params[:description])
+      render :json => interface 
     else
       render :json => {:message => "Authentication not provided."}
     end
   end
  
+  def all_interfaces()
+    if !request.headers["Auth"].blank?
+      enterprise = Enterprise.get_by_session(request.headers["Auth"])
+      render :json => enterprise.interfaces
+    else
+      render :json => {:message => "Authentication not provided."}
+    end
+  end
 end

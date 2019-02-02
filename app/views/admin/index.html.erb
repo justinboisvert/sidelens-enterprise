@@ -2,6 +2,20 @@
 <head>
 <title>Sidelens</title>
 <link rel='stylesheet' href='/home.css'/>
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+  $.ajax({
+    url:"/enterprise/self", 
+    headers:{"Auth":Cookies.get("Auth")}, 
+    type:"GET", 
+    success: function(resp){
+      console.log(resp);
+    }
+  });
+});
+</script>
 </head>
 <body>
 <div id='menu'>
@@ -10,15 +24,16 @@
 <div id = 'container-panel'>
 <br/><br/>
 <div id = 'content-panel'>
-<span class = 'panel-header'>MyLife License</span><br/>
+<b>Overview</b>
 <ul>
-<li><b>12</b> total registered interfaces.</li>
-<li><b>4</b> total behavior profiles created.</b></li>
-<li><b>400</b> total behaviors blacklisted.</li>
-<li><b>40,000</b> total requests processed this month.</li>
+<li>12 total registered interfaces</li>
+<li>4 total behavior profiles created</b></li>
+<li>400 total behaviors blacklisted</li>
+<li>40,000 total requests processed this month</li>
 </ul>
 </div>
 </div>
+<div id = 'downer' class = 'version-comp'>v1.0</div>
 <div id = 'downer'>&copy; TreasureHunt Group Inc.</div>
 </body>
 </html>

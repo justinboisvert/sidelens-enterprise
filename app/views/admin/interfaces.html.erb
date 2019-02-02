@@ -1,0 +1,68 @@
+<html>
+<head>
+<title>Sidelens</title>
+<link rel='stylesheet' href='/home.css'/>
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+  $("#panel-add-interface").hide();
+  $.ajax({
+    headers: {"Auth" : Cookies.get("Auth")},
+    type: "GET",
+    url: "/enterprise/interfaces/",
+    success: function(data){
+      console.log(data);
+    }
+  });
+
+  $(".add_first_interface").click(function(){
+    $("#panel-add-interface").fadeIn(100);
+  });
+
+  $(".interface_button").click(function(){
+    name = $("input[name=interface_name]").val();
+    host= $("input[name=interface_host]").val();
+    port = $("input[name=interface_port]").val();
+    desc = $("textarea[name=interface_description]").val();
+     
+    $("#panel-add-interface").fadeOut(100);
+  });
+  $(".window_x").click(function(){
+    $("#panel-add-interface").fadeOut(100);
+    $.ajax({
+      headers: {"Auth" : Cookies.get("Auth")},
+      type: "GET",
+      url: "/enterprise/interfaces/",
+      success: function(data){
+        console.log(data);
+      }   
+    }); 
+  }); 
+});
+</script>
+</head>
+<body>
+<div id = 'panel-add-interface'>
+<div class = 'window_title'><b>Add interface</b></div><div class = 'window_x'><a href = 'javascript:void(0)'>X</a></div><br/>
+<span>Name</span> <input type = 'text' name = 'interface_name'/><br/>
+<span>Host</span> <input type = 'text' name = 'interface_host'/><br/>
+<span>Port</span> <input type = 'text' name = 'interface_port'/><br/>
+<span>Description</span><br/>
+<textarea name = 'interface_description'></textarea><br/><br/>
+<button class = 'interface_button'>Submit</button>
+</div>
+<div id='menu'>
+<%= get_menu.html_safe %>
+</div>
+<div id = 'container-panel'>
+<br/><br/>
+<div id = 'content-panel'>
+<b>Interfaces</b><br/><br/>
+You don't have any attached interfaces yet. <a class = 'add_first_interface' href = '#'>Add your first here</a>.
+</div>
+</div>
+<div id = 'downer'>v1.0</div>
+<div id = 'downer'>&copy; TreasureHunt Group Inc.</div>
+</body>
+</html>

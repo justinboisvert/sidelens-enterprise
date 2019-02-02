@@ -33,7 +33,7 @@ class ApplicationController < ActionController::Base
 
   def create_enterprise()
     encrypted_pass = BCrypt::Password.create(params[:password])  
-    enterprise = Enterprise.create(:username => params[:username], :password => encrypted_pass, :hasPaid => false)
+    enterprise = Enterprise.create(:username => params[:username], :password => encrypted_pass, :hasPaid => false, :company => params[:company])
     render :json => enterprise
   end
  

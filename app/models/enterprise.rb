@@ -23,12 +23,11 @@ class Enterprise < ApplicationRecord
   def self.get_by_session(session)
     if $redis.get(session) != nil
       id = $redis.get(session).to_i
-      return Enterprise.where(:id => id)
+      return Enterprise.where(:id => id).first
     else
       return {:message => "No session exists"}
     end
   end
  
-
    
 end
