@@ -6,13 +6,13 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script>
 $(document).ready(function(){
-  
+  id = 0;
   $.ajax({
-    url:"/enterprise/interfaces/"+window.location.pathname.split("/")[2], 
+    url:"/enterprise/interfaces/"+window.location.pathname.split("/")[3], 
     headers:{"Auth":Cookies.get("Auth")}, 
     type:"GET", 
     success: function(resp){
-      console.log(resp);
+      $(".interface_name").html("<b>Interfaces</b> > <b>"+resp["name"]+"</b>"); 
     }
   });
 });
@@ -25,13 +25,19 @@ $(document).ready(function(){
 <div id = 'container-panel'>
 <br/><br/>
 <div id = 'content-panel'>
-<b>Overview</b>
-<ul>
-<li>12 total registered interfaces</li>
-<li>4 total behavior profiles created</b></li>
-<li>400 total behaviors blacklisted</li>
-<li>40,000 total requests processed this month</li>
-</ul>
+<span class = 'interface_name'>Overview</span><br/>
+<div class = 'graph_hits'></div>
+<div class = 'lower_body'>
+<div class = 'interface_info'>
+
+</div> 
+<div class = 'behaviors'>
+efe
+</div>
+<div class = 'behavior_info'>
+
+</div>
+</div>
 </div>
 </div>
 <div id = 'downer' class = 'version-comp'>v1.0</div>

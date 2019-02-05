@@ -18,5 +18,8 @@ class AdminController < ActionController::Base
     render
   end
 
- 
+  def interfaces_selection
+    @id = params[:id]
+    render
+  end 
 end

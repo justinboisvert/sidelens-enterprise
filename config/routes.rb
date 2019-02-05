@@ -8,9 +8,11 @@ Rails.application.routes.draw do
   post "/enterprise/create", to: "application#create_enterprise"
   post "/enterprise/interfaces/create", to: "enterprise#create_interface"
   get "/enterprise/interfaces/", to: "enterprise#all_interfaces"
+  get "/enterprise/interfaces/:id", to: "enterprise#get_interface"
   post "/enterprise/login", to: "enterprise#login"
   get "/enterprise/self", to: "enterprise#get_by_session"
   post "/enterprise/logout", to: "enterprise#logout"
   get "/panel/", to: "admin#index"
   get "/panel/interfaces", to: "admin#interfaces"
+  get "/panel/interfaces/:id", to: "admin#interfaces_selection"
 end
