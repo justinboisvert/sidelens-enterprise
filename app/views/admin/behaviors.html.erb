@@ -1,0 +1,124 @@
+<html>
+<head>
+<title>Sidelens</title>
+<link rel='stylesheet' href='/home.css'/>
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+  connected = {"false" : "Not connected", "true" : "Connected"}
+  $("#panel-add-interface").hide();
+  function reloadBehaviors(){
+    $.ajax({
+      headers: {"Auth" : Cookies.get("Auth")},
+      type: "GET",
+      url: "/enterprise/behaviors/",
+      success: function(data){
+        if (data.length == 0){
+          list = "<div class = 'behavior_block' name = 'plus_block'><div class = 'interface_plus'><img name = 'plussy' src = '/img/plus.svg'></div></div>"
+          $("#content-interface").html(list);
+          $("div[name=plus_block]").mouseover(function(){
+            $("img[name=plussy]").attr("src","/img/plus_pink.svg");
+          });
+          $("div[name=plus_block]").mouseout(function(){
+            $("img[name=plussy]").attr("src","/img/plus.svg");
+          });
+         
+          $("div[name=plus_block]").click(function(){
+            $("#panel-add-interface").fadeIn(100);
+          });
+        }
+        else {
+          length = data.length;
+          list = "";
+          $.each(data, function(index,value){
+            list = list + "<div name = '"+value["id"]+"' class = 'behavior_block interface_clickable'>"+value["name"]+"<br/><br/>";
+            list = list + "<div class = 'interface_description'>"+value["description"] + "</div></div>"
+          });
+          list = list + "<div class = 'behavior_block' name = 'plus_block'><div class = 'interface_plus'><img name = 'plussy' src = '/img/plus.svg'></div></div>"
+          $("#content-interface").html(list);
+          $("div[name=plus_block]").mouseover(function(){
+            $("img[name=plussy]").attr("src","/img/plus_pink.svg");
+          });
+          $("div[name=plus_block]").mouseout(function(){
+            $("img[name=plussy]").attr("src","/img/plus.svg");
+          });
+        
+          $("div[name=plus_block]").click(function(){
+            $("#panel-add-interface").fadeIn(100);
+          });
+          
+         $(".behavior_block").mouseover(function(){
+           $(this).css( 'cursor', 'pointer' );
+         });
+
+         $(".behavior_block").mouseout(function(){
+           $(this).css( 'cursor', 'default' );
+         });
+         $(".interface_clickable").click(function(){
+            console.log("hello");
+            window.location = "/panel/behaviors/"+$(this).attr("name");
+         });
+        }
+      }
+    });
+  }
+  
+  reloadBehaviors();
+
+  function clearFields(){ 
+    $("input[name=behavior_name]").val('');
+    $("textarea[name=behavior_description]").val(''); 
+  }
+
+  $("div[name=plus_block]").click(function(){
+    $("#panel-add-interface").fadeIn(100);
+  });
+
+  $(".behavior_button").click(function(){
+    name = $("input[name=behavior_name]").val();
+    desc = $("textarea[name=behavior_description]").val();
+        
+    $.ajax({
+      headers: {"Auth" : Cookies.get("Auth")},
+      type: "POST",
+      url: "/enterprise/behaviors/create",
+      data: $.param({"name" : name, "description": desc}),
+      success: function(data){
+        $("#panel-add-interface").fadeOut(100);
+        clearFields();
+        reloadBehaviors();
+      } 
+    }); 
+  });
+  $(".window_x").click(function(){
+    $("#panel-add-interface").fadeOut(100);
+    clearFields();
+  });
+});
+</script>
+</head>
+<body>
+<div id = 'panel-add-interface'>
+<div class = 'window_title'><b>Add Behavior</b></div><div class = 'window_x'><a href = 'javascript:void(0)'>X</a></div><br/>
+<span>Name</span> <input type = 'text' name = 'behavior_name'/><br/>
+<span>Description</span><br/>
+<textarea name = 'behavior_description'></textarea><br/><br/>
+<button class = 'behavior_button'>Submit</button>
+</div>
+<div id='menu'>
+<%= get_menu.html_safe %>
+</div>
+<div id = 'container-panel'>
+<br/><br/>
+<div id = 'content-panel'>
+<b>Behaviors</b><br/><br/>
+<div id = 'content-interface'>
+
+</div>
+</div>
+</div>
+<div id = 'downer'>v1.0</div>
+<div id = 'downer'>&copy; TreasureHunt Group Inc.</div>
+</body>
+</html>

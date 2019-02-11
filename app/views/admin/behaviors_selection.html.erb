@@ -1,0 +1,138 @@
+<html>
+<head>
+<title>Sidelens</title>
+<link rel='stylesheet' href='/home.css'/>
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+  var bscript = {"rules" : {}};  
+ 
+  var rule_count  = 0;
+
+  var curr_rule = "";
+
+  // load preset information
+
+  function saveBehavior(){
+    if (curr_rule != ""){
+      bscript["rules"][curr_rule]["parameters"] = $("input[name=parameter_field]").val();
+      bscript["rules"][curr_rule]["order"] = $("select[name=order_field]").val();
+    }
+    $(".interface_name").html("<b>Behaviors</b> > <b>"+$("input[name=b_name]").val()+"</b>");  
+    $.ajax({
+      url:"/enterprise/behaviors/"+window.location.pathname.split("/")[3], 
+      headers:{"Auth":Cookies.get("Auth")}, 
+      type:"PUT",
+      data: $.param({"name": $("input[name=b_name]").val(), "description" : $("textarea[name=b_desc]").val(), "bscript": JSON.stringify(bscript)}),
+      success: function(resp){
+        console.log(resp);
+      }
+    });
+  }
+ 
+  function displayBehavior(behavior){
+    if (behavior["bscript"] != ""){
+      bscript = JSON.parse(behavior["bscript"]);
+      updateMenu();  
+    }
+    $(".interface_name").html("<b>Behaviors</b> > <b>"+behavior["name"]+"</b>");
+    $("input[name=b_name]").val(behavior["name"]);
+    $("textarea[name=b_desc]").val(behavior["description"]);
+  }
+ 
+  function addRule(rule_name){
+    bscript["rules"][rule_name+"-"+rule_count.toString()] = {"module":rule_name, "parameters":"", "order":"pattern"};
+    console.log(bscript);
+    rule_count++;
+    updateMenu();
+  }
+ 
+  function updateMenu(){
+    $(".rule_list").val('');
+    rule_list_html = "";
+    $.each(bscript["rules"], function(index,value){
+      rule_list_html += "<a name = '"+index+"' class = 'rule_link' href ='#'>"+index+"</a><br/>";
+    });
+    $(".rule_list").html(rule_list_html);
+    $(".rule_link").click(function(){
+      if (curr_rule != ""){
+        bscript["rules"][curr_rule]["parameters"] = $("input[name=parameter_field]").val();
+        bscript["rules"][curr_rule]["order"] = $("select[name=order_field]").val();
+      }   
+      curr_rule = $(this).attr("name");
+      updateParameters();
+    });
+  }
+
+  function updateParameters(){
+   parameters_html = "<b>"+curr_rule+"</b><br/>";
+   parameters_html += "Parameters: <input name='parameter_field' type='text'/><br/>";
+   parameters_html += "Order: <select name='order_field'><option value='unique'>unique</option><option value = 'pattern'>pattern</option><option value='group'>group</option></select><br/>";
+   $(".parameters").html(parameters_html);
+   $("select[name=order_field]").val(bscript["rules"][curr_rule]["order"]);
+   $("input[name=parameter_field]").val(bscript["rules"][curr_rule]["parameters"]);
+  
+  }
+ 
+  $.ajax({
+    url:"/panel/tools/rules", 
+    headers:{"Auth":Cookies.get("Auth")}, 
+    type:"GET", 
+    success: function(resp){
+      default_rules = "";
+      console.log(resp);
+      $.each(resp, function(index,value){
+        default_rules = default_rules + "<a href = '#' name = '"+value+"' class = 'default_rule'>"+value+"</a><br/>";
+      });
+      $(".default_rules").html(default_rules);
+      $.each(resp, function(index,value){
+        $("a[name="+value+"]").click(function(){
+          addRule($(this).attr("name"));
+        });
+      }); 
+    }
+  });
+
+  $.ajax({
+    url:"/enterprise/behaviors/"+window.location.pathname.split("/")[3], 
+    headers:{"Auth":Cookies.get("Auth")}, 
+    type:"GET", 
+    success: function(resp){
+      displayBehavior(resp);
+    }
+  });
+ 
+  $("button[name=b_submit]").click(function(){
+    saveBehavior();
+  });
+
+});
+</script>
+</head>
+<body>
+<div id='menu'>
+<%= get_menu.html_safe %>
+</div>
+<div id = 'container-panel'>
+  <br/><br/>
+  <div id = 'content-panel'>
+    <span class = 'interface_name'>Overview</span><br/>
+    <div class = 'behavior_panel'>
+      <div class = 'behavior_default_rules'>Rule Library <div class = 'default_rules b_content'>hello</div></div>
+      <div class = 'behavior_applied_rules'>Rule List <div class = 'rule_list b_content'></div></div>
+      <div class = 'behavior_parameters'>Parameters <div class = 'parameters b_content'></div></div>
+      <div class = 'behavior_info'>Info <div class = 'b_content'>
+      Name: <input type = 'text' name = 'b_name'/><br/>
+      Description: <br/>
+      <textarea name = 'b_desc'></textarea><br/><br/>
+      
+      <button name = 'b_submit'>Save behavior</button>
+      </div></div>
+    </div>
+  </div>
+</div>
+<div id = 'downer' class = 'version-comp'>v1.0</div>
+<div id = 'downer'>&copy; TreasureHunt Group Inc.</div>
+</body>
+</html>
