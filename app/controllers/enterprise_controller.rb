@@ -50,4 +50,45 @@ class EnterpriseController < ActionController::Base
       render :json => {:message => "authenticaiton not provided."}
     end
   end
+
+  def create_behavior()
+    if !request.headers["Auth"].blank?
+      enterprise = Enterprise.get_by_session(request.headers["Auth"])
+      behavior = enterprise.behaviors.create(:name => params[:name], :description => params[:description], :bscript => "")
+      render :json => behavior
+    else
+      render :json => {:message => "authenticaiton not provided."}
+    end
+  end
+
+  def all_behaviors()
+    if !request.headers["Auth"].blank?
+      enterprise = Enterprise.get_by_session(request.headers["Auth"])
+      render :json => enterprise.behaviors
+    else
+      render :json => {:message => "authenticaiton not provided."}
+    end  
+  end
+
+
+  def get_behavior()
+    if !request.headers["Auth"].blank?
+      enterprise = Enterprise.get_by_session(request.headers["Auth"])
+      behavior = enterprise.behaviors.where(:id => params[:id]).first
+      render :json => behavior
+    else
+      render :json => {:message => "authenticaiton not provided."}
+    end 
+  end
+
+  def modify_behavior()
+    if !request.headers["Auth"].blank?
+      enterprise = Enterprise.get_by_session(request.headers["Auth"])
+      behavior = enterprise.behaviors.where(:id => params[:id]).first
+      behavior.update(:name => params[:name], :description => params[:description], :bscript => params[:bscript])
+      render :json => behavior    
+    else
+      render :json => {:message => "authentication not provided."}
+    end
+  end
 end

@@ -2,7 +2,7 @@ require 'securerandom'
 
 class Enterprise < ApplicationRecord
   has_many :interfaces
-
+  has_many :behaviors
   def self.login(username,password)
     if exists?(:username => username)
       user = where(:username => username)[0]
