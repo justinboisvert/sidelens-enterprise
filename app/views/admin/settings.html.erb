@@ -1,0 +1,44 @@
+<html>
+<head>
+<title>Sidelens</title>
+<link rel='stylesheet' href='/home.css'/>
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/logout.js"></script>
+<script>
+
+$.ajax({
+  headers: {"Auth": Cookies.get("Auth")},
+  type: "GET",
+  url: "/enterprise/self",
+  success: function(resp){
+    console.log(resp);
+    $(".enterprise_license").html(resp["company"]+" monthly subscription");
+    $(".enterprise_access_key").html("SECRET_KEY_HERE");
+    $(".enterprise_payment").html("Paypal | Stripe");
+  }  
+});
+</script>
+</head>
+<body>
+  <div id='menu'>
+    <%= get_menu.html_safe %>
+  </div>
+  <div id = 'container-panel'>
+    <br/><br/>
+    <div id = 'content-panel'>
+    <b>Settings</b><br/><br/>
+
+    License:<br/>
+    <span class = 'enterprise_license'></span><br/>
+    Access Key:<br/>
+    <span class = 'enterprise_access_key'></span><br/>
+    Payment information:<br/>
+    <span class = 'enterprise_payment'></span><br/>
+     
+    </div>
+  </div>
+  <div id = 'downer' class = 'version-comp'>v1.0</div>
+  <div id = 'downer'>&copy; TreasureHunt Group Inc.</div>
+</body>
+</html>
