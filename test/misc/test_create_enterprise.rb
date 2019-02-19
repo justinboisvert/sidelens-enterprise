@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 require 'unirest'
 
-req = Unirest.post("http://localhost:3000/enterprise/create", parameters: {:username => "jason1", :password => "cookie", :company => "MyLife"})
+req = Unirest.post("http://localhost:3000/enterprise/create", parameters: {:username => "aaron", :password => "cookie", :company => "joblo"})
 
 puts req.body
 

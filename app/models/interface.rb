@@ -1,5 +1,4 @@
 class Interface < ApplicationRecord
   belongs_to :enterprise
-  has_many :behavior_hooks
-      
+  serialize :behavior_list, JSON  
 end

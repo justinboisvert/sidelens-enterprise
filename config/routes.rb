@@ -10,9 +10,10 @@ Rails.application.routes.draw do
 
   post "/enterprise/interfaces/create", to: "enterprise#create_interface"
   get "/enterprise/interfaces/", to: "enterprise#all_interfaces"
- # post "/enterprise/interfaces/:id/behaviors/attach/:id", to: "enterprise#attach_interface_behavior"
- # get "/enterprise/interfaces/:id/behaviors", to: "enterprise#get_interface_behaviors"
   get "/enterprise/interfaces/:id", to: "enterprise#get_interface"
+  put  "/enterprise/interfaces/:id", to: "enterprise#modify_interface"
+  put "/enterprise/interfaces/:id/behaviors", to: "enterprise#update_interface_behaviors"
+  get "/enterprise/interfaces/:id/behaviors", to: "enterprise#get_interface_behaviors"
   get "/enterprise/behaviors", to: "enterprise#all_behaviors"
   get "/enterprise/behaviors/:id", to: "enterprise#get_behavior"
   put "/enterprise/behaviors/:id", to: "enterprise#modify_behavior"
@@ -24,8 +25,10 @@ Rails.application.routes.draw do
  
   get "/panel/", to: "admin#index"
   get "/panel/interfaces", to: "admin#interfaces"
+  get "/panel/logout", to: "admin#logout"
   get "/panel/interfaces/:id", to: "admin#interfaces_selection"
   get "/panel/behaviors", to: "admin#behaviors"
   get "/panel/behaviors/:id", to: "admin#behaviors_selection"
+  get "/panel/settings", to: "admin#settings"
   get "/panel/tools/rules", to: "admin#rules"
 end

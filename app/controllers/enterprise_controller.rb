@@ -25,7 +25,7 @@ class EnterpriseController < ActionController::Base
   def create_interface()
     if !request.headers["Auth"].blank?
       enterprise = Enterprise.get_by_session(request.headers["Auth"])
-      interface = enterprise.interfaces.create(:name => params[:name], :connected => false, :host => params[:host], :port => params[:port], :description => params[:description])
+      interface = enterprise.interfaces.create(:name => params[:name], :connected => false, :host => params[:host], :port => params[:port], :description => params[:description], :behavior_list => "{}")
       render :json => interface 
     else
       render :json => {:message => "Authentication not provided."}
@@ -86,6 +86,49 @@ class EnterpriseController < ActionController::Base
       enterprise = Enterprise.get_by_session(request.headers["Auth"])
       behavior = enterprise.behaviors.where(:id => params[:id]).first
       behavior.update(:name => params[:name], :description => params[:description], :bscript => params[:bscript])
+      render :json => behavior    
+    else
+      render :json => {:message => "authentication not provided."}
+    end
+  end
+
+  def update_interface_behaviors()
+    if !request.headers["Auth"].blank?
+      enterprise = Enterprise.get_by_session(request.headers["Auth"])
+      interface = enterprise.interfaces.where(:id => params[:id]).first
+      interface.update(:behavior_list => params[:behavior_list])
+      render :json => interface[:behavior_list]    
+    else
+      render :json => {:message => "authentication not provided."}
+    end
+  end
+
+  def update_interface_behaviors()
+    if !request.headers["Auth"].blank?
+      enterprise = Enterprise.get_by_session(request.headers["Auth"])
+      interface = enterprise.interfaces.where(:id => params[:id]).first
+      interface.update(:behavior_list => params[:behavior_list])
+      render :json => interface[:behavior_list]    
+    else
+      render :json => {:message => "authentication not provided."}
+    end
+  end
+
+  def get_interface_behaviors()
+    if !request.headers["Auth"].blank?
+      enterprise = Enterprise.get_by_session(request.headers["Auth"])
+      interface = enterprise.interfaces.where(:id => params[:id]).first
+      render :plain => interface[:behavior_list]    
+    else
+      render :json => {:message => "authentication not provided."}
+    end
+  end
+
+  def modify_interface()
+   if !request.headers["Auth"].blank?
+      enterprise = Enterprise.get_by_session(request.headers["Auth"])
+      behavior = enterprise.interfaces.where(:id => params[:id]).first
+      behavior.update(:name => params[:name], :description => params[:description], :host => params[:host], :port => params[:port])
       render :json => behavior    
     else
       render :json => {:message => "authentication not provided."}

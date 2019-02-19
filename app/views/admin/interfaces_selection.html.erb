@@ -4,16 +4,138 @@
 <link rel='stylesheet' href='/home.css'/>
 <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/logout.js"></script>
 <script>
 $(document).ready(function(){
-  id = 0;
+  selected_behaviors = {};
+  selected_behavior = "";
+  function displayInterface(interface){
+    connected_map = { "false" : "Not connected", "true" : "Connected" };
+    $(".interface_name").html("<b>Interfaces</b> > <b>"+interface["name"]+"</b>");
+    $("input[name=i_name]").val(interface["name"]);
+    $("textarea[name=i_desc]").val(interface["description"]);
+    $("input[name=i_host]").val(interface["host"]);
+    $("input[name=i_port]").val(interface["port"]);
+    $("span[name=i_connected]").html(connected_map[interface["connected"].toString()]);
+  }
+
+  function handleCheckboxClick(checkbox){
+   behavior_id = $(checkbox).attr("name");
+   if($(checkbox).is(":checked") == true){
+     selected_behaviors[behavior_id]["attached"] = true;
+     handleSubviewClick(behavior_id); 
+   } else {
+     if (selected_behavior == behavior_id){
+       saveParams();
+       $(".ratelimit_view").html('');
+     }  
+     selected_behaviors[behavior_id]["attached"] = false;   
+   }
+  }
+
+  function saveParams(){
+    if (selected_behavior != ""){
+      selected_behaviors[selected_behavior]["ratelimit"]["hour"] = $("input[name=ratelimit_hour]").val();
+      selected_behaviors[selected_behavior]["ratelimit"]["minute"] = $("input[name=ratelimit_minute]").val();
+      selected_behaviors[selected_behavior]["ratelimit"]["second"] = $("input[name=ratelimit_second]").val();
+    }
+  }
+
+  function handleSubviewClick(behavior_id){
+    if(selected_behaviors[behavior_id]["attached"] == true){
+      selected_behavior = behavior_id;
+      ratelimit_panel = "";
+      ratelimit_panel += "Hour:<br/><input type = 'text' name = 'ratelimit_hour'/><br/>";
+      ratelimit_panel += "Minute:<br/><input type = 'text' name = 'ratelimit_minute'/><br/>";
+      ratelimit_panel += "Second:<br/><input type = 'text' name = 'ratelimit_second'/>";
+      $(".ratelimit_view").html(ratelimit_panel);
+      
+      $("input[name=ratelimit_hour]").val(selected_behaviors[behavior_id]["ratelimit"]["hour"]);
+      $("input[name=ratelimit_minute]").val(selected_behaviors[behavior_id]["ratelimit"]["minute"]);
+      $("input[name=ratelimit_second]").val(selected_behaviors[behavior_id]["ratelimit"]["second"]);
+    }
+  }
+
+  function displayBehaviors(behaviors,server_behaviors){
+    behavior_html = "";
+    $.each(behaviors, function (index,value){
+      if (value["id"] in server_behaviors){
+        server_ratelimit = server_behaviors[value["id"]]["ratelimit"];
+        selected_behaviors[value["id"]] = {"attached": true, "ratelimit": {"hour": server_ratelimit["hour"] , "minute":server_ratelimit["minute"], "second": server_ratelimit["second"]}};
+        behavior_html += "<div class = 'behavior_subview' name = '"+value["id"]+"'><span class = 'behavior_check'><input type = 'checkbox' checked='checked' class = 'behavior_checkbox' name = '"+value["id"]+"'></span><br/><div class = 'behavior_target' name='"+value["id"]+"'><span class = 'behavior_name_text'><b>"+value["name"]+"</b></span>";
+        behavior_html += "<br/>"+value["description"]+"</div></div>";   
+      } else {
+        selected_behaviors[value["id"]] = {"attached": false, "ratelimit": {"hour": 0, "minute":0, "second": 0}};
+        behavior_html += "<div class = 'behavior_subview' name = '"+value["id"]+"'><span class = 'behavior_check'><input type = 'checkbox' class = 'behavior_checkbox' name = '"+value["id"]+"'></span><br/><div class = 'behavior_target' name='"+value["id"]+"'><span class = 'behavior_name_text'><b>"+value["name"]+"</b></span>";
+      behavior_html += "<br/>"+value["description"]+"</div></div>";   
+      }
+
+    });
+    $(".behavior_views").html(behavior_html);
+    $(".behavior_checkbox").click(function(){
+      handleCheckboxClick(this); 
+    });
+    $(".behavior_target").click(function(){
+      saveParams();
+      behavior_id = $(this).attr("name");
+      handleSubviewClick($(this).attr("name"));
+    });
+  }
+
   $.ajax({
     url:"/enterprise/interfaces/"+window.location.pathname.split("/")[3], 
     headers:{"Auth":Cookies.get("Auth")}, 
     type:"GET", 
     success: function(resp){
-      $(".interface_name").html("<b>Interfaces</b> > <b>"+resp["name"]+"</b>"); 
+      displayInterface(resp);
+      
     }
+  });
+
+  $.ajax({
+    url:"/enterprise/behaviors", 
+    headers:{"Auth":Cookies.get("Auth")}, 
+    type:"GET", 
+    success: function(behaviors){
+      
+    $.ajax({
+      url:"/enterprise/interfaces/"+window.location.pathname.split("/")[3]+"/behaviors", 
+      headers:{"Auth":Cookies.get("Auth")}, 
+      type:"GET", 
+      success: function(server_behaviors){
+        console.log(server_behaviors);
+        displayBehaviors(behaviors,JSON.parse(server_behaviors));
+      }
+    });
+    }
+  });
+
+  $("button[name=save_interface]").click(function(){
+    saveParams();
+    behavior_list = {};
+    $.ajax({
+      url:"/enterprise/interfaces/"+window.location.pathname.split("/")[3], 
+      headers:{"Auth":Cookies.get("Auth")}, 
+      type:"PUT",
+      data: $.param({name: $("input[name=i_name]").val(), description: $("textarea[name=i_desc").val(), host: $("input[name=i_host]").val(), port: parseInt($("input[name=i_port]").val())}), 
+      success: function(resp){
+        console.log(resp);
+      }
+    });
+    $.each(selected_behaviors, function(index, value){
+      if (value["attached"] == true){
+        behavior_list[index] = {"ratelimit": value["ratelimit"]};
+      }
+    });
+    $.ajax({
+      url:"/enterprise/interfaces/"+window.location.pathname.split("/")[3]+"/behaviors", 
+      headers:{"Auth":Cookies.get("Auth")},
+      data: $.param({behavior_list: JSON.stringify(behavior_list)}),
+      type:"PUT", 
+      success: function(resp){
+        console.log(resp);
+      }
+    });
   });
 });
 </script>
@@ -24,23 +146,40 @@ $(document).ready(function(){
 </div>
 <div id = 'container-panel'>
 <br/><br/>
-<div id = 'content-panel'>
-<span class = 'interface_name'>Overview</span><br/>
-<div class = 'graph_hits'></div>
-<div class = 'lower_body'>
-<div class = 'interface_info'>
-
-</div> 
-<div class = 'behaviors'>
-efe
+  <div id = 'content-panel'>
+    <span class = 'interface_name'>Overview</span><br/>
+    <div class = 'graph_hits'>Insert sexy timeline here</div>
+    <div class = 'interface_holder'>
+      <div class = 'interface_info'>Info
+        <div class = 'interface_content'>
+        Name: <input type = 'text' name = 'i_name'/><br/>
+        Description:<br/>
+        <textarea name = 'i_desc'></textarea><br/>
+        Host: <input type = 'text' name = 'i_host'/><br/>
+        Port: <input type = 'text' name = 'i_port'/><br/><br/>
+        <span class ='not_connected' name = 'i_connected'>Not connected</span>
+        </div> 
+      </div>
+      <div class = 'interface_info_large'>Behaviors
+        <div class = 'interface_content behavior_views'>
+         <div class = 'behavior_subview'>
+           fuck that
+         </div>
+         <div class = 'behavior_subview'>
+           hell yeah
+         </div>
+        </div>
+      </div>
+      <div class = 'interface_info'>Rate Limit
+      <div class = 'interface_content ratelimit_view'></div>
+      </div>
+      <div class = 'interface_info'>Information
+      <div class = 'interface_content'><button name = 'save_interface'>Save</button></div>
+      </div>
+    </div>
+  </div>
 </div>
-<div class = 'behavior_info'>
-
-</div>
-</div>
-</div>
-</div>
-<div id = 'downer' class = 'version-comp'>v1.0</div>
+<div id = 'downer'>v1.0</div>
 <div id = 'downer'>&copy; TreasureHunt Group Inc.</div>
 </body>
 </html>
