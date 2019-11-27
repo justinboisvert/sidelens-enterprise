@@ -1,24 +1,11 @@
-# README
+# Sidelens
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Sidelens (http://sidelens.co) is a way for you to block application level behaviors that come through your web application. 
 
-Things you may want to cover:
+Current features so far:
 
-* Ruby version
+Interface & behavioral creation
 
-* System dependencies
+Agent polling (health checks)
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Ratelimiting (block an behavior x amount of times per hour, minute, and second)
